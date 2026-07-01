@@ -42,6 +42,10 @@ inputs:
       description: Run clippy/rustfmt checks (only one matrix entry should set this)
       required: false
       default: "false"
+   run_tests:
+      description: Run Rust tests for host-arch native builds
+      required: false
+      default: "true"
    save_cache:
       description: Whether Swatinem/rust-cache should write a cache entry (GitHub-hosted only)
       required: false
@@ -295,7 +299,7 @@ runs:
         # Windows-only tests are no longer exercised in CI (win32-x64 cross-builds
         # on Linux). Skipping the duplicate Linux runs on macOS saves ~10 min of
         # parallel runner time.
-        if: inputs.target == '' && inputs.platform != 'darwin'
+        if: inputs.run_tests == 'true' && inputs.target == '' && inputs.platform != 'darwin'
         shell: bash
         run: bun run test:rs
       - name: Build native addon(s)
